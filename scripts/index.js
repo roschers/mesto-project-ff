@@ -4,62 +4,77 @@ const cardTemplate = document.querySelector('#card-template').content;
 
 // @todo: DOM узлы
 const cardContainer = document.querySelector('.places__list');
-const createCard = document.querySelector('.profile__add-button'); //кнопка +
-const newCard = document.querySelector('.popup_type_new-card'); // попап нового места
-const saveButton = newCard.querySelector('.popup__button'); // кнопка Сохранить в попапе
-const closeButton = newCard.querySelector('.popup__close'); // кнопка х в попапе
+const newCard = document.querySelector('.profile__add-button'); //кнопка +
+const popupCard = document.querySelector('.popup_type_new-card'); // попап нового места
+const saveButton = popupCard.querySelector('.popup__button'); // кнопка Сохранить в попапе
+const closeButton = popupCard.querySelector('.popup__close'); // кнопка х в попапе
+const popupForm = popupCard.querySelector('.popup__form');
 
 // @todo: Функция создания карточки
 
-function openPopu() {
-  newCard.classList.add('popup_is-opened');
+function openPopup() {
+  popupCard.classList.add('popup_is-opened');
 }
 
 function closePopup() {
-  newCard.classList.remove('popup_is-opened');
+  popupCard.classList.remove('popup_is-opened');
 }
 
-createCard.addEventListener('click', function(evt) { 
+newCard.addEventListener('click', function(evt) { 
   evt.preventDefault();
-  openPopu();
+  openPopup();
 });
 
 saveButton.addEventListener('click', function (evt) {
     evt.preventDefault();
 
-    const name = newCard.querySelector('.popup__input_type_card-name');
-    const link = newCard.querySelector('.popup__input_type_url');
+    let name = popupCard.querySelector('.popup__input_type_card-name');
+    let link = popupCard.querySelector('.popup__input_type_url');
 
-    addCard(name.value, link.value);
+    name = name.value;
+    link = link.value;
+    const newCardData = {name, link}
 
-    name.value = '';
-    link.value = '';
+    createCard(newCardData, deleteCard);
+    
+    popupForm.reset();
     
     closePopup();
   });
 
 // @todo: Функция удаления карточки
 closeButton.addEventListener('click', function () {
-  newCard.classList.remove('popup_is-opened');
+  popupCard.classList.remove('popup_is-opened');
+  popupForm.reset();
   closePopup();
 });
 
-// @todo: Вывести карточки на страницу
-function addCard(name, link) {
-  const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
+function deleteCard (cardElement) {
+  cardElement.closest('.places__item').remove();
+}
 
-  cardElement.querySelector('.card__image').src = link;
-  cardElement.querySelector('.card__title').textContent = name;
+// @todo: Вывести карточки на страницу
+function createCard(cardData, deleteCard) {
+  const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
+  const deleteButton = cardElement.querySelector('.card__delete-button');
+
+  cardElement.querySelector('.card__image').src = cardData.link;
+  cardElement.querySelector('.card__image').alt = cardData.name;
+  cardElement.querySelector('.card__title').textContent = cardData.name;
 
   cardContainer.prepend(cardElement); 
 
-  cardElement.querySelector('.card__delete-button').addEventListener('click', function (evt) {
-    evt.target.closest('.places__item').remove();
+  deleteButton.addEventListener('click', ()=> {
+    deleteCard (cardElement);
   });
+
+  return cardElement;
 };
 
+// function addCard()  
+
 for (const card of initialCards) {
-  addCard(card.name, card.link);
+  createCard(card, deleteCard);
   console.log(initialCards);
 };
 
