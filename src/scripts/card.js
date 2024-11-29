@@ -1,6 +1,6 @@
 // @todo: Функция удаления карточки
 
-function deleteCard (cardElement) {
+export function deleteCard (cardElement) {
   cardElement.closest('.places__item').remove();
 };
 
@@ -12,8 +12,7 @@ export function cardLike(evt) {
 };
 
 // @todo: Вывести карточки на страницу
-export function createCard(name, link, cardLike, openPopup) {
-  const cardContainer = document.querySelector('.places__list');
+export function createCard(name, link, deleteCard, cardLike, openPopup) {
   const cardTemplate = document.querySelector('#card-template').content;
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
   const deleteButton = cardElement.querySelector('.card__delete-button');
@@ -25,11 +24,10 @@ export function createCard(name, link, cardLike, openPopup) {
   cardImage.src = link;
   cardImage.alt = name;
   cardElement.querySelector('.card__title').textContent = name;
-
-  cardContainer.prepend(cardElement); 
+ 
 
   deleteButton.addEventListener('click', ()=> {
-    deleteCard (cardElement);
+    deleteCard(cardElement);
   });
 
   cardElement.addEventListener('click', function (evt) {
@@ -38,7 +36,7 @@ export function createCard(name, link, cardLike, openPopup) {
 
   cardImage.addEventListener('click', (evt)=> {
     evt.preventDefault();
-    openPopup(cardImagePopup, cardImage.src, cardImage.alt);
+    openPopup(cardImage.src, cardImage.alt);
   });
 
   return cardElement;

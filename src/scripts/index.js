@@ -1,14 +1,14 @@
 import '../pages/index.css';
 import {initialCards} from './cards.js'
-import {closePopup, openPopup, setSubmitButtonState, handleFormSubmit, photoPopup} from './modal.js';
-import {createCard, cardLike} from './card.js';
+import {closePopup, openPopup, setSubmitButtonState, editProfileHandleForm, openPhotoPopup} from './modal.js';
+import {createCard, cardLike, deleteCard} from './card.js';
 
 // @todo: DOM узлы
+const cardContainer = document.querySelector('.places__list');
 const newCard = document.querySelector('.profile__add-button'); //кнопка +
 const popupCard = document.querySelector('.popup_type_new-card'); // попап Нового места
 const saveButton = popupCard.querySelector('.popup__button'); // кнопка Сохранить в попапе Новое место
 const closeButtonCard = popupCard.querySelector('.popup__close'); // кнопка х в попапе Новое место
-const popupForm = popupCard.querySelector('.popup__form');
 
 const newPlace = document.forms['new-place']; //форма попап Новое место
 const placeName = newPlace.elements['place-name']; // Новое место название
@@ -18,12 +18,11 @@ const editProfileButton = document.querySelector('.profile__edit-button'); //к�
 const popupProfile = document.querySelector('.popup_type_edit'); //попап редактирование профиля 
 
 const editProfile = document.forms['edit-profile']; //форма попап Редактирование
-const name = editProfile.elements['name']; // форма Редактирование Имя
+const nameProfile = editProfile.elements['name']; // форма Редактирование Имя
 const description = editProfile.elements['description']; //форма Редактирование Хобби
 
 const saveButtonProfile = popupProfile.querySelector('.popup__button'); // кнопка Сохранить в попапе Профиль
 const closeButtonProfile = popupProfile.querySelector('.popup__close'); // кнопка х в попапе Профиль
-const popupFormProfile = popupProfile.querySelector('.popup__form');
 
 const popupImage = document.querySelector('.popup_type_image'); //блок с открытой картинкой
 const closeButtonImage = popupImage.querySelector('.popup__close'); //крестик у картинки
@@ -40,7 +39,7 @@ newCard.addEventListener('click', function(evt) {
 newPlace.addEventListener('submit', function (evt) {
   evt.preventDefault();
 
-  createCard(placeName.value, link.value, cardLike, photoPopup);
+  cardContainer.prepend(createCard(placeName.value, link.value, deleteCard, cardLike, openPhotoPopup));
   newPlace.reset();
   setSubmitButtonState(saveButton, false);
 
@@ -56,14 +55,14 @@ newPlace.addEventListener('input', function (evt) {
 
 //нажатие х для карточки нового места
 closeButtonCard.addEventListener('click', function () { 
-  popupForm.reset();
+  newPlace.reset();
 
   closePopup(popupCard);
 }); 
 
 // создание первоначальных карточек
 for (const card of initialCards) {
-  createCard(card.name, card.link, cardLike, photoPopup);
+  cardContainer.prepend(createCard(card.name, card.link, deleteCard, cardLike, openPhotoPopup));
 };
 
 // редактирование аккаунта 
@@ -74,7 +73,7 @@ editProfileButton.addEventListener('click', function(evt) {
   const currentProfile = document.querySelector('.profile__title').textContent // текущее имя профиля
   const currentProfileDesc = document.querySelector('.profile__description').textContent // текущее описание профиля
   
-  name.value = currentProfile;
+  nameProfile.value = currentProfile;
   description.value = currentProfileDesc;
   
   openPopup(popupProfile);
@@ -84,7 +83,7 @@ editProfileButton.addEventListener('click', function(evt) {
 editProfile.addEventListener('submit', function (evt) {
   evt.preventDefault();
 
-  handleFormSubmit(evt); 
+  editProfileHandleForm(evt); 
   editProfile.reset();
   setSubmitButtonState(saveButtonProfile, false);
 
@@ -93,19 +92,17 @@ editProfile.addEventListener('submit', function (evt) {
 
 // проверка на валидность формы для профиля
 editProfile.addEventListener('input', function (evt) {
-  const isValid = name.value.length > 0 && description.value.length > 0;
+  const isValid = nameProfile.value.length > 0 && description.value.length > 0;
   setSubmitButtonState(saveButtonProfile, isValid);
 });
 
 // нажатие х для формы профиля
 closeButtonProfile.addEventListener('click', function () {
-  popupFormProfile.reset();
+  editProfile.reset(); //нужно ли очищать форму профиля ?
 
   closePopup(popupProfile);
 }); 
 
 closeButtonImage.addEventListener('click', function () {
-  popupFormProfile.reset();
-  
   closePopup(popupImage);
 }); 
