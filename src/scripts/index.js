@@ -1,6 +1,6 @@
 import '../pages/index.css';
 import {initialCards} from './cards.js'
-import {closePopup, openPopup, setSubmitButtonState, editProfileHandleForm, openPhotoPopup} from './modal.js';
+import {closePopup, openPopup, setSubmitButtonState} from './modal.js';
 import {createCard, cardLike, deleteCard} from './card.js';
 
 // @todo: DOM узлы
@@ -20,14 +20,34 @@ const popupProfile = document.querySelector('.popup_type_edit'); //попап р
 const editProfile = document.forms['edit-profile']; //форма попап Редактирование
 const nameProfile = editProfile.elements['name']; // форма Редактирование Имя
 const description = editProfile.elements['description']; //форма Редактирование Хобби
-
+const currentProfile = document.querySelector('.profile__title'); // текущее имя профиля
+const currentProfileDesc = document.querySelector('.profile__description'); // текущее описание профиля
 const saveButtonProfile = popupProfile.querySelector('.popup__button'); // кнопка Сохранить в попапе Профиль
 const closeButtonProfile = popupProfile.querySelector('.popup__close'); // кнопка х в попапе Профиль
 
 const popupImage = document.querySelector('.popup_type_image'); //блок с открытой картинкой
 const closeButtonImage = popupImage.querySelector('.popup__close'); //крестик у картинки
-
 //добавить Новое место
+
+function editProfileHandleForm(evt) {
+  evt.preventDefault(); 
+  
+  currentProfile.textContent = nameProfile.value;
+  currentProfileDesc.textContent = description.value;
+ 
+};
+
+function openPhotoPopup(image, nameImg) {
+  const popupElement = document.querySelector('.popup_type_image');
+  const img = popupElement.querySelector('.popup__image');
+  const popupcardImageСaption = popupElement.querySelector('.popup__caption');
+
+  img.src = image;
+  img.alt = nameImg;
+  popupcardImageСaption.textContent = nameImg;
+
+  openPopup(popupElement);
+};
 
 //Кнопка +
 newCard.addEventListener('click', function(evt) { 
@@ -83,7 +103,7 @@ editProfileButton.addEventListener('click', function(evt) {
 editProfile.addEventListener('submit', function (evt) {
   evt.preventDefault();
 
-  editProfileHandleForm(evt); 
+  editProfileHandleForm(evt, currentProfile, currentProfileDesc); 
   editProfile.reset();
   setSubmitButtonState(saveButtonProfile, false);
 
