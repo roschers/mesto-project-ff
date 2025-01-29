@@ -20,3 +20,11 @@
     line-height: 15px;
   }
 }
+
+/* Стиль для текста ошибки */
+.popup__error_visible {
+  color: red; /* Красный цвет текста */
+  font-size: 12px; /* Размер шрифта */
+  margin-top: 4px; /* Отступ сверху */
+  visibility: visible; /* Делаем текст видимым */
+}
