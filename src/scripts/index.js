@@ -35,6 +35,9 @@ const closeButtonProfile = popupProfile.querySelector('.popup__close');
 
 const popupImage = document.querySelector('.popup_type_image');
 const closeButtonImage = popupImage.querySelector('.popup__close');
+const img = popupImage.querySelector('.popup__image');
+const caption = popupImage.querySelector('.popup__caption');
+
 
 const profileAvatar = document.querySelector('.profile__image');
 const avatarForm = document.querySelector('.popup__form[name="update-avatar"]');
@@ -145,13 +148,10 @@ closeButtonImage.addEventListener('click', function () {
 
 // Функция для открытия попапа с изображением
 function openPhotoPopup(image, nameImg) {
-  const popupElement = document.querySelector('.popup_type_image');
-  const img = popupElement.querySelector('.popup__image');
-  const caption = popupElement.querySelector('.popup__caption');
   img.src = image;
   img.alt = nameImg;
   caption.textContent = nameImg;
-  openPopup(popupElement);
+  openPopup(popupImage);
 }
 
 //нажатие х для карточки нового места
